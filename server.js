@@ -111,24 +111,35 @@ const server = http.createServer((req, res) => {
         });
     }
 
-    // Fallback for unknown routes
-    else {
-        // If it's a DELETE request, we'll handle it in the next chat
-        if (method === 'DELETE') {
-            res.writeHead(501);
-            res.end(JSON.stringify({ message: "DELETE functionality coming in the next update!" }));
+    // 5. DELETE RECORD (DELETE /api/records/:id)
+    else if (method === 'DELETE' && url.startsWith('/api/records/')) {
+        const id = url.split('/')[3];
+        const records = readData();
+        const filteredRecords = records.filter(r => r.id !== id);
+
+        if (records.length !== filteredRecords.length) {
+            writeData(filteredRecords);
+            res.writeHead(200);
+            res.end(JSON.stringify({ message: "Record deleted successfully" }));
         } else {
             res.writeHead(404);
-            res.end(JSON.stringify({ message: "Route not found" }));
+            res.end(JSON.stringify({ message: "Record not found" }));
         }
+    }
+
+    // Fallback for unknown routes
+    else {
+        res.writeHead(404);
+        res.end(JSON.stringify({ message: "Route not found" }));
     }
 });
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log('Available Routes:');
-    console.log('GET /api/records - Get all records');
-    console.log('GET /api/records/:id - Get record by ID');
-    console.log('POST /api/records - Create a new record');
-    console.log('PUT /api/records/:id - Update an existing record');
+    console.log('GET    /api/records     - Get all records');
+    console.log('GET    /api/records/:id - Get record by ID');
+    console.log('POST   /api/records     - Create a new record');
+    console.log('PUT    /api/records/:id - Update an existing record');
+    console.log('DELETE /api/records/:id - Delete a record');
 });
