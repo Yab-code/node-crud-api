@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "Node.js Basics",
+    "description": "Learn the fundamentals of Node.js without frameworks."
+  },
+  {
+    "id": "2",
+    "name": "HTTP Module",
+    "description": "Deep dive into the native Node.js HTTP module."
+  }
+]
